@@ -6,6 +6,7 @@
 
 (ns chinese-checkers.board)
 
+(def directions [:e :ne :nw :w :sw :se])
 (def board
 {
 1  {:ne 3 :nw 2 }
