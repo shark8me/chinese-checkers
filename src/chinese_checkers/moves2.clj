@@ -1,8 +1,9 @@
 (ns chinese-checkers.moves2
   (:use [chinese-checkers.board :as board]
-        [clojure.set :as set]
+        [clojure.set :as set]        
         [clojure.test]
-       ))
+       )
+  (:require [clojure.zip :as zip]))
 
 (defn onestep
   ([i] (onestep i []))
@@ -90,3 +91,21 @@
 
 (is (= '([1 4] [1 4 15] [2 4] [2 9] [3 10] [3 8] [5 9] [5 8] [5 4] [6 10] [6 9] [6 4] [6 4 15] [7 16] [7 15] [7 4] [7 8])
        (moves [1 2 3 5 6 7])))
+
+  (comment
+(defprotocol Pos 
+  (make-moves [this])
+  (apply-move [this move])
+  (pnode [this]))
+
+(defrecord EPosition [curpos from ]
+  Pos
+  (make-moves [this] (vec (map #(apply-move this %) (moves (:curpos this)))))
+  (apply-move [this move] 
+               (EPosition. 
+                 (conj (clojure.core/remove #(= % (move 0)) (:curpos this)) (peek move))
+                 (into from [move])))
+  (pnode [this] (assoc (EPosition. (:curpos this) (:from this)) 
+                       :children (make-moves this))) 
+  )
+)
