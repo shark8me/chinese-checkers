@@ -85,9 +85,9 @@
 (defn moves
   ([mine] (moves mine []))
   ([mine others]
-    (let [excepti (fn[x] (into (remove #(= x %) mine) others))]
-    (mapcat #(move % (excepti %)) mine))
-    ))
+    (lazy-seq (let [excepti (fn[x] (into (remove #(= x %) mine) others))]
+                (mapcat #(move % (excepti %)) mine))
+              )))
 
 (is (= '([1 4] [1 4 15] [2 4] [2 9] [3 10] [3 8] [5 9] [5 8] [5 4] [6 10] [6 9] [6 4] [6 4 15] [7 16] [7 15] [7 4] [7 8])
        (moves [1 2 3 5 6 7])))
